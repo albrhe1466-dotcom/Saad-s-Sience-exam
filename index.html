@@ -1,0 +1,1715 @@
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        background: #050816;
+        overflow: hidden;
+        height: 100vh;
+        font-family: "Tahoma";
+    }
+
+    /* الكلمات الساقطة */
+    .fall-word {
+        position: absolute;
+        top: -50px;
+        font-size: 26px;
+        font-weight: bold;
+        color: rgba(255,255,255,0.25);
+        animation: fall 3.2s linear forwards;
+        user-select: none;
+        pointer-events: none;
+    }
+
+    /* حركة السقوط */
+    @keyframes fall {
+        0% { transform: translateY(0) scale(1); opacity: 0.4; }
+        80% { transform: translateY(85vh) scale(1); opacity: 1; }
+        100% { transform: translateY(85vh) scale(1); opacity: 0; }
+    }
+
+    /* تأثير التشقق */
+    .crack {
+        position: absolute;
+        width: 90px;
+        height: 90px;
+        background: url('https://i.imgur.com/8z0Yk0o.png');
+        background-size: cover;
+        opacity: 0;
+        animation: crackAnim 0.6s ease forwards;
+        pointer-events: none;
+    }
+
+    @keyframes crackAnim {
+        0% { transform: scale(0.2); opacity: 0; }
+        100% { transform: scale(1); opacity: 0.8; }
+    }
+</style>
+
+<script>
+    const words = [
+        "قلب", "رئتان", "سرطان", "كلى", "دم", "شرايين",
+        "هيموجلوبين", "أكسجين", "خلايا", "بلازما", "تنفس",
+        "نبض", "ضغط الدم", "صفائح", "كريات", "كبد", "طحال"
+    ];
+
+    function spawnWord() {
+        const w = document.createElement("div");
+        w.className = "fall-word";
+        w.textContent = words[Math.floor(Math.random()*words.length)];
+        w.style.left = Math.random() * window.innerWidth + "px";
+
+        document.body.appendChild(w);
+
+        setTimeout(() => {
+            const crack = document.createElement("div");
+            crack.className = "crack";
+            crack.style.left = w.style.left;
+            crack.style.top = "85vh";
+            document.body.appendChild(crack);
+
+            setTimeout(() => crack.remove(), 1200);
+            w.remove();
+        }, 3000);
+    }
+
+    setInterval(spawnWord, 450);
+</script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>امتحان العلوم للمعلم سعد</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        /* إعدادات أساسية */
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            font-family: "Tahoma", "Segoe UI", sans-serif;
+            background: #050816;
+            color: #f9fafb;
+            overflow-x: hidden;
+        }
+
+        body {
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* خلفية متحركة بكلمات كيميائية ومعادن */
+        .chemical-background {
+            position: fixed;
+            inset: 0;
+            overflow: hidden;
+            z-index: -1;
+            background: radial-gradient(circle at top, #12223a 0, #050816 55%, #02010a 100%);
+        }
+
+        .chemical-symbol {
+            position: absolute;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.09);
+            font-weight: bold;
+            animation: float-symbol 20s linear infinite;
+            white-space: nowrap;
+            user-select: none;
+            pointer-events: none;
+        }
+
+        .chemical-symbol:nth-child(odd) {
+            animation-duration: 26s;
+        }
+
+        .chemical-symbol:nth-child(3n) {
+            animation-duration: 32s;
+        }
+
+        @keyframes float-symbol {
+            0% {
+                transform: translate3d(0, 0, 0) scale(0.9);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.28;
+            }
+            50% {
+                opacity: 0.5;
+                transform: translate3d(-40px, -150px, 0) scale(1.15);
+            }
+            90% {
+                opacity: 0.18;
+            }
+            100% {
+                transform: translate3d(-90px, -270px, 0) scale(1.3);
+                opacity: 0;
+            }
+        }
+
+        /* الحاوية العامة */
+        .app-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 18px 14px 40px;
+        }
+
+        @media (min-width: 768px) {
+            .app-container {
+                padding: 32px 16px 56px;
+            }
+        }
+
+        /* صندوق المقدمة */
+        .intro-overlay {
+            position: relative;
+            border-radius: 22px;
+            padding: 20px 16px 22px;
+            margin-bottom: 20px;
+            background: radial-gradient(circle at top left, rgba(34, 197, 94, 0.2), rgba(15, 23, 42, 0.98));
+            border: 1px solid rgba(74, 222, 128, 0.8);
+            box-shadow:
+                0 20px 45px rgba(0, 0, 0, 0.8),
+                0 0 0 1px rgba(15, 23, 42, 0.9);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .intro-overlay::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.38), transparent 55%),
+                radial-gradient(circle at 100% 0%, rgba(59, 130, 246, 0.26), transparent 55%);
+            mix-blend-mode: screen;
+            opacity: 0.9;
+            pointer-events: none;
+        }
+
+        .intro-inner {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 14px;
+        }
+
+        @media (min-width: 720px) {
+            .intro-inner {
+                grid-template-columns: 1.2fr 1fr;
+                align-items: center;
+            }
+        }
+
+        .intro-text-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            margin: 0 0 6px;
+        }
+
+        .intro-text-sub {
+            font-size: 0.9rem;
+            margin: 0 0 8px;
+        }
+
+        .intro-text-grade {
+            font-size: 0.82rem;
+            opacity: 0.95;
+        }
+
+        .intro-buttons-row {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .intro-chip-row {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 0.78rem;
+        }
+
+        .intro-chip {
+            padding: 4px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(74, 222, 128, 0.7);
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        /* جزء المادة والأمراض */
+        .intro-visual {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0;
+        }
+
+        .intro-molecule-core {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 10%, #bbf7d0, #16a34a, #052e16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #022c22;
+            font-weight: 800;
+            font-size: 1.1rem;
+            box-shadow:
+                0 0 22px rgba(34, 197, 94, 0.9),
+                0 0 0 1px rgba(22, 101, 52, 0.9);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-molecule-core::after {
+            content: "";
+            position: absolute;
+            inset: 18px;
+            border-radius: 50%;
+            border: 1px dashed rgba(240, 253, 250, 0.6);
+            opacity: 0.8;
+        }
+
+        .intro-disease-orbit {
+            position: absolute;
+            width: 190px;
+            height: 190px;
+            border-radius: 50%;
+            border: 1px dashed rgba(148, 163, 184, 0.4);
+            animation: orbit-rotate 16s linear infinite;
+        }
+
+        .intro-disease-orbit span {
+            position: absolute;
+            font-size: 0.72rem;
+            color: #e5e7eb;
+            padding: 3px 7px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.6);
+            background: rgba(15, 23, 42, 0.9);
+            white-space: nowrap;
+        }
+
+        .intro-disease-orbit span:nth-child(1) {
+            top: -8px;
+            right: 50%;
+            transform: translateX(50%);
+        }
+
+        .intro-disease-orbit span:nth-child(2) {
+            bottom: -10px;
+            left: 12px;
+        }
+
+        .intro-disease-orbit span:nth-child(3) {
+            bottom: 14px;
+            right: -8px;
+        }
+
+        @keyframes orbit-rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* أزرار عامة */
+        .btn {
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-size: 0.84rem;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            white-space: nowrap;
+            transition:
+                transform 0.14s ease,
+                box-shadow 0.14s ease,
+                background 0.18s ease,
+                opacity 0.18s ease;
+        }
+
+        .btn span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.24), transparent 55%);
+            transition: opacity 0.18s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #22c55e, #84cc16);
+            color: #052e16;
+            box-shadow:
+                0 12px 30px rgba(22, 163, 74, 0.6),
+                0 0 0 1px rgba(190, 242, 100, 0.7);
+        }
+
+        .btn-secondary {
+            background: rgba(15, 23, 42, 0.96);
+            color: #e5e7eb;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.9);
+        }
+
+        .btn-icon {
+            font-size: 1.05rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* تأثير تلاشي البكسلات لصندوق المقدمة */
+        .intro-overlay.destroying {
+            pointer-events: none;
+        }
+
+        .intro-pixel {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #22c55e;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+            opacity: 0;
+            border-radius: 1px;
+            animation: pixel-fall 0.8s linear forwards;
+        }
+
+        .intro-overlay.fade-out-content .intro-inner {
+            opacity: 0;
+            filter: blur(3px);
+            transition: opacity 0.3s ease, filter 0.3s ease;
+        }
+
+        @keyframes pixel-fall {
+            0% {
+                transform: translate3d(0, 0, 0) scale(1);
+                opacity: 1;
+            }
+            60% {
+                transform: translate3d(0, 30px, 0) scale(0.9);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translate3d(0, 80px, 0) scale(0.4);
+                opacity: 0;
+            }
+        }
+
+        /* ترويسة الامتحان */
+        .header-card {
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(22, 163, 74, 0.26));
+            border-radius: 18px;
+            padding: 18px 16px;
+            box-shadow:
+                0 18px 40px rgba(0, 0, 0, 0.7),
+                0 0 0 1px rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(74, 222, 128, 0.5);
+            position: relative;
+            overflow: hidden;
+            margin-top: 6px;
+        }
+
+        .header-card::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.35), transparent 55%),
+                radial-gradient(circle at 100% 0%, rgba(52, 211, 153, 0.26), transparent 55%);
+            opacity: 0.9;
+            mix-blend-mode: screen;
+            pointer-events: none;
+        }
+
+        .header-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .exam-title {
+            margin: 0;
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+        }
+
+        .exam-subtitle {
+            margin: 6px 0 0;
+            font-size: 0.9rem;
+            opacity: 0.95;
+        }
+
+        .exam-grade-line {
+            margin-top: 4px;
+            font-size: 0.85rem;
+            opacity: 0.95;
+        }
+
+        .exam-meta {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px 14px;
+            font-size: 0.78rem;
+            opacity: 0.95;
+        }
+
+        .meta-pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid rgba(74, 222, 128, 0.7);
+        }
+
+        /* شريط التقدم */
+        .progress-wrapper {
+            margin-top: 18px;
+        }
+
+        .progress-label-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+
+        .progress-bar-track {
+            width: 100%;
+            height: 8px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.85);
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #22c55e, #bef264);
+            box-shadow: 0 0 12px rgba(34, 197, 94, 0.7);
+            transition: width 0.45s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        /* بطاقة السؤال */
+        .card-shell {
+            margin-top: 22px;
+            border-radius: 18px;
+            background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.98));
+            box-shadow:
+                0 18px 50px rgba(15, 23, 42, 0.95),
+                0 0 0 1px rgba(34, 197, 94, 0.18);
+            border: 1px solid rgba(34, 197, 94, 0.55);
+            padding: 16px 14px 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .card-shell {
+                padding: 22px 22px 24px;
+            }
+        }
+
+        .card-shell::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(135deg, rgba(56, 189, 248, 0.14), transparent 60%),
+                radial-gradient(circle at 100% 100%, rgba(132, 204, 22, 0.16), transparent 55%);
+            mix-blend-mode: soft-light;
+            opacity: 0.9;
+            pointer-events: none;
+        }
+
+        .question-slide-container {
+            position: relative;
+            min-height: 240px;
+            overflow: hidden;
+        }
+
+        .question-slide {
+            position: absolute;
+            inset: 0;
+            padding: 6px 0 0;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(60px) scale(0.98);
+        }
+
+        .question-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0) scale(1);
+            animation: slide-in-right 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .question-slide.exit-left {
+            animation: slide-out-left 0.4s cubic-bezier(0.55, 0.06, 0.68, 0.19);
+        }
+
+        .question-slide.exit-right {
+            animation: slide-out-right 0.4s cubic-bezier(0.55, 0.06, 0.68, 0.19);
+        }
+
+        @keyframes slide-in-right {
+            0% {
+                opacity: 0;
+                transform: translateX(60px) scale(0.96);
+            }
+            60% {
+                opacity: 1;
+                transform: translateX(-3px) scale(1.01);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        @keyframes slide-out-left {
+            0% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(-60px) scale(0.96);
+            }
+        }
+
+        @keyframes slide-out-right {
+            0% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateX(60px) scale(0.96);
+            }
+        }
+
+        .question-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .question-index-badge {
+            min-width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 0, #bbf7d0, #22c55e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            box-shadow: 0 0 16px rgba(74, 222, 128, 0.7);
+            color: #052e16;
+        }
+
+        .question-text {
+            font-size: 0.98rem;
+            line-height: 1.7;
+            font-weight: 600;
+        }
+
+        .question-score {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 4px;
+        }
+
+        .options-list {
+            margin-top: 10px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .option-item {
+            position: relative;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.9);
+            cursor: pointer;
+            border: 1px solid rgba(74, 222, 128, 0.7);
+            font-size: 0.9rem;
+            transition:
+                transform 0.14s ease,
+                box-shadow 0.14s ease,
+                border-color 0.18s ease,
+                background 0.18s ease,
+                color 0.18s ease;
+            color: #bbf7d0;
+        }
+
+        .option-label:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 10px 24px rgba(15, 23, 42, 0.9),
+                0 0 0 1px rgba(74, 222, 128, 0.9);
+            border-color: rgba(22, 163, 74, 0.95);
+            background: radial-gradient(circle at top, rgba(21, 128, 61, 0.35), rgba(15, 23, 42, 0.98));
+        }
+
+        .option-label.selected {
+            border-color: rgba(22, 163, 74, 1);
+            box-shadow:
+                0 0 0 1px rgba(22, 163, 74, 0.9),
+                0 12px 28px rgba(22, 163, 74, 0.6);
+            background: radial-gradient(circle at top, rgba(34, 197, 94, 0.4), rgba(15, 23, 42, 0.98));
+            color: #ecfdf5;
+        }
+
+        .option-bullet {
+            width: 18px;
+            height: 18px;
+            border-radius: 999px;
+            border: 2px solid rgba(134, 239, 172, 0.8);
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+        }
+
+        .option-bullet::after {
+            content: "";
+            position: absolute;
+            inset: 3px;
+            border-radius: inherit;
+            background: #22c55e;
+            transform: scale(0);
+            opacity: 0;
+            transition:
+                transform 0.2s ease,
+                opacity 0.2s ease;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        input[type="radio"]:checked + .option-label .option-bullet::after {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        input[type="radio"]:checked + .option-label {
+            border-color: rgba(22, 163, 74, 1);
+        }
+
+        /* أزرار التنقل في الامتحان */
+        .nav-row {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn-ghost {
+            border-radius: 999px;
+            padding: 9px 14px;
+            font-size: 0.84rem;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            background: rgba(15, 23, 42, 0.95);
+            color: #e5e7eb;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            box-shadow: 0 8px 20px rgba(15, 23, 42, 0.9);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-ghost span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-ghost::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.24), transparent 55%);
+            transition: opacity 0.18s ease;
+        }
+
+        .btn-ghost:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn-ghost:hover::before {
+            opacity: 1;
+        }
+
+        .btn-ghost:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .btn-primary[disabled] {
+            opacity: 0.4;
+            cursor: default;
+            box-shadow: none;
+        }
+
+        /* بطاقة النتيجة */
+        .result-card {
+            margin-top: 22px;
+            border-radius: 18px;
+            background: radial-gradient(circle at top, rgba(15, 23, 42, 0.97), rgba(8, 15, 30, 0.99));
+            border: 1px solid rgba(74, 222, 128, 0.7);
+            padding: 18px 16px;
+            box-shadow:
+                0 18px 44px rgba(15, 23, 42, 0.92),
+                0 0 0 1px rgba(15, 23, 42, 0.96);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .result-card::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background:
+                radial-gradient(circle at 0% 0%, rgba(34, 197, 94, 0.38), transparent 55%),
+                radial-gradient(circle at 100% 0%, rgba(52, 211, 153, 0.28), transparent 55%);
+            mix-blend-mode: screen;
+            opacity: 0.95;
+            pointer-events: none;
+        }
+
+        .result-inner {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 16px;
+        }
+
+        @media (min-width: 720px) {
+            .result-inner {
+                grid-template-columns: 1.1fr 1fr;
+                align-items: center;
+            }
+        }
+
+        .result-main-text {
+            font-size: 0.92rem;
+            line-height: 1.9;
+        }
+
+        .result-chips {
+            margin-top: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .result-chip {
+            padding: 4px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.7);
+            font-size: 0.75rem;
+            background: rgba(15, 23, 42, 0.93);
+        }
+
+        .result-gauge-wrapper {
+            display: flex;
+            justify-content: center;
+        }
+
+        .result-circle {
+            width: 170px;
+            height: 170px;
+            border-radius: 50%;
+            background: conic-gradient(
+                    from 270deg,
+                    #22c55e var(--progress, 0%),
+                    rgba(30, 64, 175, 0.35) var(--progress, 0%)
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow:
+                0 16px 40px rgba(22, 163, 74, 0.5),
+                0 0 0 1px rgba(15, 23, 42, 0.95);
+        }
+
+        .result-circle::before {
+            content: "";
+            position: absolute;
+            inset: 10px;
+            border-radius: inherit;
+            background: radial-gradient(circle at top, #020617, #020617 48%, #0b1120 100%);
+            box-shadow:
+                inset 0 0 18px rgba(15, 23, 42, 0.95),
+                0 0 0 1px rgba(148, 163, 184, 0.3);
+        }
+
+        .result-circle-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .result-score-main {
+            font-size: 1.65rem;
+            font-weight: 800;
+        }
+
+        .result-score-sub {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 2px;
+        }
+
+        .result-grade {
+            margin-top: 6px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+
+        .result-note {
+            margin-top: 4px;
+            font-size: 0.75rem;
+            opacity: 0.9;
+        }
+
+        .result-hidden {
+            display: none;
+        }
+
+        /* تذييل */
+        .footer-note {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: rgba(148, 163, 184, 0.9);
+            text-align: center;
+        }
+
+        .footer-note span {
+            opacity: 0.95;
+        }
+
+        /* إظهار/إخفاء قسم الامتحان */
+        .exam-section.hidden {
+            display: none;
+        }
+
+        /* تحسين للجوال */
+        @media (max-width: 480px) {
+            .exam-title {
+                font-size: 1.15rem;
+            }
+
+            .card-shell {
+                margin-top: 18px;
+            }
+
+            .result-circle {
+                width: 150px;
+                height: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="chemical-background" aria-hidden="true">
+    <!-- رموز كيميائية وعناصر ومعادن في الخلفية -->
+    <div class="chemical-symbol" style="top: 80%; right: 5%;">CO₂ • Na • Fe • O₂ • Cu</div>
+    <div class="chemical-symbol" style="top: 65%; right: 35%;">H₂O • Au • Ag • Zn • K</div>
+    <div class="chemical-symbol" style="top: 75%; right: 70%;">Pb • Ca • Mg • Cl₂ • P</div>
+    <div class="chemical-symbol" style="top: 55%; right: 15%;">CO • NH₃ • Sn • Si • N₂</div>
+    <div class="chemical-symbol" style="top: 40%; right: 55%;">O₂ • CO₂ • Fe • Na • Al</div>
+    <div class="chemical-symbol" style="top: 30%; right: 80%;">H₂ • He • Ne • Ar • Rb</div>
+    <div class="chemical-symbol" style="top: 18%; right: 25%;">K • Ca • Mn • Cr • Ni</div>
+    <div class="chemical-symbol" style="top: 10%; right: 50%;">SO₂ • NO₂ • CO₂ • O₃ • Br</div>
+</div>
+
+<div class="app-container">
+    <!-- صندوق المقدمة -->
+    <section class="intro-overlay" id="intro-box">
+        <div class="intro-inner">
+            <div>
+                <h2 class="intro-text-title">مرحبا بك في امتحان العلوم للمعلم سعد</h2>
+                <p class="intro-text-sub">
+                    هذا النموذج التفاعلي يساعدك على مراجعة أهم مفاهيم الدم، القلب، الكلى، وفقر الدم وسرطان الدم
+                    بطريقة ممتعة ومتحركة.
+                </p>
+                <p class="intro-text-grade">
+                    الصف الثاني الإعدادي – المملكة العربية السعودية.
+                </p>
+                <div class="intro-chip-row">
+                    <div class="intro-chip">موضوعات: فقر الدم – سرطان الدم – القلب – الكلى</div>
+                    <div class="intro-chip">عدد الأسئلة: ١٥ سؤالًا اختيار من متعدد</div>
+                    <div class="intro-chip">الدرجة الكاملة: ٢٠ / ٢٠</div>
+                </div>
+                <div class="intro-buttons-row">
+                    <button class="btn btn-primary" id="start-btn" type="button">
+                        <span class="btn-icon">▶</span>
+                        <span>ابدأ الآن</span>
+                    </button>
+                    <button class="btn btn-secondary" id="explain-btn" type="button">
+                        <span class="btn-icon">ℹ</span>
+                        <span>شرح الامتحان</span>
+                    </button>
+                </div>
+            </div>
+            <div class="intro-visual">
+                <div class="intro-molecule-core">
+                    H<span style="font-size:0.9rem;">b</span>–Fe
+                </div>
+                <div class="intro-disease-orbit">
+                    <span>فقر الدم</span>
+                    <span>سرطان الدم</span>
+                    <span>أمراض الكلى</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- قسم الامتحان (يظهر بعد الضغط على ابدأ) -->
+    <section class="exam-section hidden" id="exam-section">
+        <!-- ترويسة الامتحان -->
+        <header class="header-card">
+            <div class="header-inner">
+                <h1 class="exam-title">امتحان العلوم للمعلم سعد</h1>
+                <p class="exam-subtitle">
+                    امتحان تفاعلي لمراجعة مفاهيم الدم، القلب، الكلى، وفقر الدم وسرطان الدم.
+                </p>
+                <p class="exam-grade-line">
+                    الصف الثاني الإعدادي – المملكة العربية السعودية.
+                </p>
+                <div class="exam-meta">
+                    <div class="meta-pill">عدد الأسئلة: ١٥ سؤالًا اختيار من متعدد</div>
+                    <div class="meta-pill">الدرجة الكاملة: ٢٠ / ٢٠</div>
+                    <div class="meta-pill">اللغة: العربية</div>
+                    <div class="meta-pill">مناسب للجوال والكمبيوتر</div>
+                </div>
+
+                <div class="progress-wrapper">
+                    <div class="progress-label-row">
+                        <div>تقدّم الإجابة في الامتحان</div>
+                        <div id="progress-label">السؤال ١ من ١٥</div>
+                    </div>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- بطاقة الأسئلة -->
+        <main class="card-shell" aria-label="منطقة الأسئلة">
+            <div class="question-slide-container" id="slides-container">
+                <!-- سيُبنى محتوى الأسئلة بواسطة جافاسكربت -->
+            </div>
+
+            <div class="nav-row">
+                <div class="nav-group">
+                    <button class="btn-ghost" id="prev-btn" type="button">
+                        <span class="btn-icon">⟵</span>
+                        <span>السابق</span>
+                    </button>
+                    <button class="btn-ghost" id="next-btn" type="button">
+                        <span>التالي</span>
+                        <span class="btn-icon">⟶</span>
+                    </button>
+                </div>
+                <div class="nav-group">
+                    <button class="btn btn-secondary" id="restart-btn" type="button">
+                        <span class="btn-icon">⟳</span>
+                        <span>إعادة الامتحان</span>
+                    </button>
+                    <button class="btn btn-primary" id="submit-btn" type="button">
+                        <span class="btn-icon">★</span>
+                        <span>عرض النتيجة</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- بطاقة النتيجة -->
+        <section class="result-card result-hidden" id="result-card" aria-label="نتيجة الامتحان">
+            <div class="result-inner">
+                <div>
+                    <h2 style="margin: 0 0 8px; font-size: 1.05rem; font-weight: 800;">
+                        نتيجتك في امتحان العلوم
+                    </h2>
+                    <p class="result-main-text" id="result-text">
+                        بعد إنهاء الأسئلة والضغط على زر <strong>عرض النتيجة</strong>، ستشاهد درجتك من ٢٠،
+                        والنسبة المئوية، والتقدير اللفظي، لتعرف مدى فهمك لموضوعات فقر الدم وسرطان الدم والقلب والكلى.
+                    </p>
+                    <div class="result-chips">
+                        <div class="result-chip" id="chip-raw">الدرجة من ١٥: —</div>
+                        <div class="result-chip" id="chip-20">الدرجة من ٢٠: —</div>
+                        <div class="result-chip" id="chip-percent">النسبة المئوية: —</div>
+                        <div class="result-chip" id="chip-grade">التقدير: —</div>
+                    </div>
+                </div>
+
+                <div class="result-gauge-wrapper">
+                    <div class="result-circle" id="result-circle" style="--progress: 0%;">
+                        <div class="result-circle-content">
+                            <div class="result-score-main" id="score-20-display">0 / 20</div>
+                            <div class="result-score-sub" id="score-raw-display">0 من 15 سؤالًا</div>
+                            <div class="result-grade" id="grade-label">بانتظار النتيجة</div>
+                            <div class="result-note" id="grade-note">
+                                أجب عن الأسئلة ثم اضغط على زر "عرض النتيجة" لمشاهدة تقييمك في مادة العلوم.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <p class="footer-note">
+        <span>تم إعداد هذا الامتحان التفاعلي خصيصًا لمعلم العلوم سعد – الصف الثاني الإعدادي – المملكة العربية السعودية.</span>
+    </p>
+</div>
+
+<script>
+    /* بيانات الأسئلة: ١٥ سؤالًا (بما فيها فقر الدم، سرطان الدم، القلب، الكلى) */
+    const questions = [
+        {
+            id: 1,
+            text: "فقر الدم هو حالة يقلّ فيها عدد خلايا الدم الحمراء أو كمية الهيموجلوبين. ما أهم عرض شائع لفقر الدم؟",
+            score: 1,
+            options: [
+                "زيادة الشهية بشكل كبير",
+                "شحوب الوجه والشعور بالتعب السريع",
+                "ارتفاع شديد في درجة الحرارة دائمًا",
+                "زيادة في طول الجسم بشكل مفاجئ"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 2,
+            text: "من أهم الأسباب التي قد تؤدي إلى فقر الدم عند الإنسان:",
+            score: 1,
+            options: [
+                "الإكثار من شرب الماء النقي",
+                "نقص الحديد في الغذاء أو فقدان الدم",
+                "النوم عدد ساعات كافية يوميًا",
+                "ممارسة الرياضة بانتظام"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 3,
+            text: "سرطان الدم (اللوكيميا) هو مرض يصيب أساسًا:",
+            score: 1,
+            options: [
+                "العظام فقط",
+                "خلايا الدم وإنتاجها في نخاع العظم",
+                "المعدة والأمعاء فقط",
+                "الجلد والشعر فقط"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 4,
+            text: "أي الأعضاء التالية يُعد المسؤول الأساسي عن ضخ الدم إلى جميع أجزاء الجسم؟",
+            score: 1,
+            options: [
+                "المعدة",
+                "الكبد",
+                "القلب",
+                "الكلى"
+            ],
+            correctIndex: 2
+        },
+        {
+            id: 5,
+            text: "من أهم وظائف الكلى في جسم الإنسان:",
+            score: 1,
+            options: [
+                "ضخ الدم إلى الجسم",
+                "تنقية الدم من الفضلات وتنظيم الماء والأملاح",
+                "إنتاج الهرمونات الجنسية",
+                "المساعدة على التنفس"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 6,
+            text: "أيٌّ مما يلي قد يكون سببًا مهمًا لفشل الكلى المزمن؟",
+            score: 1,
+            options: [
+                "شرب كميات كافية من الماء يوميًا",
+                "الإسراف في تناول الأدوية دون استشارة طبية",
+                "تناول الخضروات والفواكه بانتظام",
+                "ممارسة رياضة المشي"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 7,
+            text: "من العادات الصحية التي تساعد على الحفاظ على صحة الكلى:",
+            score: 1,
+            options: [
+                "الإكثار من المشروبات الغازية المالحة",
+                "شرب الماء بكميات مناسبة والابتعاد عن التدخين",
+                "تناول الأملاح بكثرة في الطعام",
+                "عدم الحركة والجلوس لساعات طويلة"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 8,
+            text: "أيٌّ من التالي يصف وظيفة الشرايين في جهاز الدوران؟",
+            score: 1,
+            options: [
+                "تنقل الدم من القلب إلى أجزاء الجسم",
+                "تنقل الدم من الجسم إلى الرئتين فقط",
+                "تخزن الدم داخل العظام",
+                "تحول الدم إلى طاقة حرارية"
+            ],
+            correctIndex: 0
+        },
+        {
+            id: 9,
+            text: "ما العنصر الغذائي المهم لتكوين هيموجلوبين الدم بشكل سليم والوقاية من فقر الدم؟",
+            score: 1,
+            options: [
+                "الحديد",
+                "الصوديوم",
+                "الكلور",
+                "النيون"
+            ],
+            correctIndex: 0
+        },
+        {
+            id: 10,
+            text: "أيٌّ مما يلي سلوك صحي يساعد على تقليل خطر الإصابة بأمراض القلب؟",
+            score: 1,
+            options: [
+                "الإكثار من الأغذية الدهنية جداً",
+                "ممارسة الرياضة والابتعاد عن التدخين",
+                "السهر لوقت متأخر يوميًا",
+                "إهمال قياس ضغط الدم"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 11,
+            text: "الدم في جسم الإنسان يتكوّن من:",
+            score: 1,
+            options: [
+                "خلايا دم بيضاء فقط",
+                "بلازما وخلايا دم حمراء وخلايا دم بيضاء وصفائح دموية",
+                "ماء نقي فقط",
+                "غازات فقط"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 12,
+            text: "أيٌّ من التالي يصف أفضل طريقة عامة للمحافظة على صحة الكلى ضمن نمط حياة صحي؟",
+            score: 1,
+            options: [
+                "الإكثار من الملح في الطعام",
+                "شرب الماء بكميات مناسبة والمتابعة الطبية عند الحاجة",
+                "تناول الأدوية من دون استشارة",
+                "عدم شرب الماء طوال اليوم"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 13,
+            text: "أيّ مما يلي يُعد مثالًا على مرض يصيب جهاز الدوران؟",
+            score: 1,
+            options: [
+                "التهاب الحلق البسيط",
+                "ارتفاع ضغط الدم",
+                "تسوّس الأسنان",
+                "التواء الكاحل"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 14,
+            text: "أيٌّ من هذه الخيارات يعبّر عن دور الرئتين في جسم الإنسان؟",
+            score: 1,
+            options: [
+                "تنقية الدم من الفضلات الصلبة",
+                "تبادل الغازات (الأكسجين وثاني أكسيد الكربون) مع الدم",
+                "إنتاج خلايا الدم الحمراء",
+                "تنظيم مستوى السكر في الدم"
+            ],
+            correctIndex: 1
+        },
+        {
+            id: 15,
+            text: "للمحافظة على صحة الدم والجسم بشكل عام يجب:",
+            score: 1,
+            options: [
+                "الإكثار من الوجبات السريعة وعدم ممارسة الرياضة",
+                "اتباع غذاء متوازن والنوم الكافي والحركة المنتظمة",
+                "تجنب شرب الماء طوال اليوم",
+                "التعرض المستمر للدخان والملوثات"
+            ],
+            correctIndex: 1
+        }
+    ];
+
+    /* متغيرات حالة الامتحان */
+    let currentIndex = 0;
+    const totalQuestions = questions.length;
+    const answers = new Array(totalQuestions).fill(null);
+
+    const slidesContainer = document.getElementById("slides-container");
+    const progressBar = document.getElementById("progress-bar");
+    const progressLabel = document.getElementById("progress-label");
+    const prevBtn = document.getElementById("prev-btn");
+    const nextBtn = document.getElementById("next-btn");
+    const submitBtn = document.getElementById("submit-btn");
+    const restartBtn = document.getElementById("restart-btn");
+
+    const resultCard = document.getElementById("result-card");
+    const resultText = document.getElementById("result-text");
+    const resultCircle = document.getElementById("result-circle");
+    const score20Display = document.getElementById("score-20-display");
+    const scoreRawDisplay = document.getElementById("score-raw-display");
+    const gradeLabel = document.getElementById("grade-label");
+    const gradeNote = document.getElementById("grade-note");
+    const chipRaw = document.getElementById("chip-raw");
+    const chip20 = document.getElementById("chip-20");
+    const chipPercent = document.getElementById("chip-percent");
+    const chipGrade = document.getElementById("chip-grade");
+
+    const introBox = document.getElementById("intro-box");
+    const examSection = document.getElementById("exam-section");
+    const startBtn = document.getElementById("start-btn");
+    const explainBtn = document.getElementById("explain-btn");
+
+    /* بناء شرائح الأسئلة */
+    function buildSlides() {
+        slidesContainer.innerHTML = "";
+
+        questions.forEach((q, index) => {
+            const slide = document.createElement("div");
+            slide.className = "question-slide";
+            if (index === 0) {
+                slide.classList.add("active");
+            }
+
+            const header = document.createElement("div");
+            header.className = "question-header";
+
+            const badge = document.createElement("div");
+            badge.className = "question-index-badge";
+            badge.textContent = index + 1;
+
+            const headerTextWrapper = document.createElement("div");
+            const qText = document.createElement("div");
+            qText.className = "question-text";
+            qText.textContent = q.text;
+
+            const qScore = document.createElement("div");
+            qScore.className = "question-score";
+            qScore.textContent = `درجة هذا السؤال: ${q.score} من ١`;
+
+            headerTextWrapper.appendChild(qText);
+            headerTextWrapper.appendChild(qScore);
+
+            header.appendChild(badge);
+            header.appendChild(headerTextWrapper);
+
+            const optionsList = document.createElement("div");
+            optionsList.className = "options-list";
+
+            q.options.forEach((optText, optIndex) => {
+                const optionItem = document.createElement("div");
+                optionItem.className = "option-item";
+
+                const inputId = `q${q.id}_opt${optIndex}`;
+
+                const input = document.createElement("input");
+                input.type = "radio";
+                input.name = `question-${q.id}`;
+                input.id = inputId;
+                input.value = String(optIndex);
+
+                const label = document.createElement("label");
+                label.className = "option-label";
+                label.setAttribute("for", inputId);
+
+                const bullet = document.createElement("div");
+                bullet.className = "option-bullet";
+
+                const textSpan = document.createElement("span");
+                textSpan.textContent = optText;
+
+                label.appendChild(bullet);
+                label.appendChild(textSpan);
+
+                input.addEventListener("change", () => {
+                    answers[index] = optIndex;
+                    optionsList.querySelectorAll(".option-label").forEach(l => {
+                        l.classList.remove("selected");
+                    });
+                    label.classList.add("selected");
+                });
+
+                optionItem.appendChild(input);
+                optionItem.appendChild(label);
+                optionsList.appendChild(optionItem);
+            });
+
+            slide.appendChild(header);
+            slide.appendChild(optionsList);
+            slidesContainer.appendChild(slide);
+        });
+    }
+
+    /* تحديث شريط التقدم */
+    function updateProgress() {
+        const current = currentIndex + 1;
+        const percent = (current / totalQuestions) * 100;
+        progressBar.style.width = percent + "%";
+        progressLabel.textContent = `السؤال ${current} من ${totalQuestions}`;
+    }
+
+    /* عرض شريحة جديدة مع أنيميشن */
+    function showSlide(newIndex, direction = "forward") {
+        if (newIndex < 0 || newIndex >= totalQuestions || newIndex === currentIndex) return;
+
+        const slides = slidesContainer.querySelectorAll(".question-slide");
+        const currentSlide = slides[currentIndex];
+        const nextSlide = slides[newIndex];
+
+        currentSlide.classList.remove("active");
+        nextSlide.classList.remove("exit-left", "exit-right");
+
+        if (direction === "forward") {
+            currentSlide.classList.add("exit-left");
+        } else {
+            currentSlide.classList.add("exit-right");
+        }
+
+        setTimeout(() => {
+            currentSlide.classList.remove("exit-left", "exit-right");
+        }, 420);
+
+        nextSlide.classList.add("active");
+
+        currentIndex = newIndex;
+        updateProgress();
+        syncNavButtons();
+        scrollIntoViewSmooth();
+        restoreSelectionForCurrentSlide();
+    }
+
+    function syncNavButtons() {
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === totalQuestions - 1;
+    }
+
+    function scrollIntoViewSmooth() {
+        const rect = slidesContainer.getBoundingClientRect();
+        const absoluteTop = rect.top + window.scrollY - 16;
+        window.scrollTo({
+            top: absoluteTop,
+            behavior: "smooth"
+        });
+    }
+
+    function restoreSelectionForCurrentSlide() {
+        const slides = slidesContainer.querySelectorAll(".question-slide");
+        const slide = slides[currentIndex];
+        const selected = answers[currentIndex];
+
+        if (selected === null) return;
+
+        slide.querySelectorAll('input[type="radio"]').forEach((input, idx) => {
+            input.checked = idx === selected;
+            const label = input.nextElementSibling;
+            if (label && label.classList.contains("option-label")) {
+                if (idx === selected) {
+                    label.classList.add("selected");
+                } else {
+                    label.classList.remove("selected");
+                }
+            }
+        });
+    }
+
+    /* حساب النتيجة وتحويلها إلى ٢٠ */
+    function calculateResult() {
+        let rawScore = 0;
+        let maxRaw = 0;
+
+        questions.forEach((q, index) => {
+            maxRaw += q.score;
+            if (answers[index] === q.correctIndex) {
+                rawScore += q.score;
+            }
+        });
+
+        const scoreFrom20 = (rawScore / maxRaw) * 20;
+        const percent = (rawScore / maxRaw) * 100;
+
+        return {
+            rawScore,
+            maxRaw,
+            scoreFrom20,
+            percent
+        };
+    }
+
+    function determineGrade(scoreFrom20, percent) {
+        let grade = "";
+        let note = "";
+
+        if (scoreFrom20 >= 18) {
+            grade = "ممتاز";
+            note = "عمل رائع! لديك فهم قوي جدًا لمفاهيم الدم والقلب والكلى.";
+        } else if (scoreFrom20 >= 16) {
+            grade = "جيد جدًا";
+            note = "أداء مميز يدل على إتقان جيد للمادة، مع إمكانية الوصول للممتاز بالمراجعة.";
+        } else if (scoreFrom20 >= 12) {
+            grade = "جيد";
+            note = "مستواك جيد، لكن تحتاج مراجعة بعض الدروس خاصة ما يتعلق بفقر الدم والكلى.";
+        } else if (scoreFrom20 >= 8) {
+            grade = "مقبول";
+            note = "النتيجة مقبولة، وهي دعوة للاهتمام أكثر بالمذاكرة والمتابعة في الحصة.";
+        } else {
+            grade = "يحتاج إلى تحسن";
+            note = "يمكنك أن تصبح أفضل بكثير مع تنظيم الوقت والاستفادة من شروحات المعلم سعد.";
+        }
+
+        return { grade, note };
+    }
+
+    function animateResultCircle(targetPercent) {
+        let current = 0;
+        const step = targetPercent / 40;
+
+        const interval = setInterval(() => {
+            current += step;
+            if (current >= targetPercent) {
+                current = targetPercent;
+                clearInterval(interval);
+            }
+            resultCircle.style.setProperty("--progress", current + "%");
+        }, 18);
+    }
+
+    function showResult() {
+        const { rawScore, maxRaw, scoreFrom20, percent } = calculateResult();
+        const rounded20 = Math.round(scoreFrom20 * 10) / 10;
+        const roundedPercent = Math.round(percent * 10) / 10;
+
+        const { grade, note } = determineGrade(rounded20, roundedPercent);
+
+        score20Display.textContent = `${rounded20} / 20`;
+        scoreRawDisplay.textContent = `${rawScore} من ${maxRaw} سؤالًا`;
+        gradeLabel.textContent = grade;
+        gradeNote.textContent = note;
+
+        chipRaw.textContent = `الدرجة من ١٥: ${rawScore} / ${maxRaw}`;
+        chip20.textContent = `الدرجة من ٢٠: ${rounded20} / ٢٠`;
+        chipPercent.textContent = `النسبة المئوية: ${roundedPercent} ٪`;
+        chipGrade.textContent = `التقدير: ${grade}`;
+
+        resultText.textContent =
+            "تم حساب نتيجتك بناءً على عدد الإجابات الصحيحة. يمكنك استخدام هذه النتيجة لمعرفة مدى استعدادك في موضوعات الدم والقلب والكلى في الصف الثاني الإعدادي.";
+
+        resultCard.classList.remove("result-hidden");
+
+        const progressForCircle = Math.min(Math.max(percent, 0), 100);
+        animateResultCircle(progressForCircle);
+
+        resultCard.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    /* التحقق قبل عرض النتيجة */
+    function canSubmit() {
+        const answeredCount = answers.filter(a => a !== null).length;
+        return answeredCount > 0;
+    }
+
+    function warnIfManyUnanswered() {
+        const answeredCount = answers.filter(a => a !== null).length;
+        const unanswered = totalQuestions - answeredCount;
+        if (unanswered >= 5) {
+            return !window.confirm(
+                "ما زال هناك عدد من الأسئلة بدون إجابة.\nهل أنت متأكد أنك تريد عرض النتيجة الآن؟"
+            );
+        }
+        return false;
+    }
+
+    /* إعادة الامتحان */
+    function restartExam() {
+        for (let i = 0; i < answers.length; i++) {
+            answers[i] = null;
+        }
+        currentIndex = 0;
+        const slides = slidesContainer.querySelectorAll(".question-slide");
+        slides.forEach((slide, index) => {
+            slide.classList.remove("active", "exit-left", "exit-right");
+            if (index === 0) {
+                slide.classList.add("active");
+            }
+            slide.querySelectorAll('input[type="radio"]').forEach(input => {
+                input.checked = false;
+            });
+            slide.querySelectorAll(".option-label").forEach(label => {
+                label.classList.remove("selected");
+            });
+        });
+
+        resultCard.classList.add("result-hidden");
+        resultCircle.style.setProperty("--progress", "0%");
+        score20Display.textContent = "0 / 20";
+        scoreRawDisplay.textContent = "0 من 15 سؤالًا";
+        gradeLabel.textContent = "بانتظار النتيجة";
+        gradeNote.textContent = "أجب عن الأسئلة ثم اضغط على زر \"عرض النتيجة\" لمشاهدة تقييمك.";
+
+        chipRaw.textContent = "الدرجة من ١٥: —";
+        chip20.textContent = "الدرجة من ٢٠: —";
+        chipPercent.textContent = "النسبة المئوية: —";
+        chipGrade.textContent = "التقدير: —";
+
+        updateProgress();
+        syncNavButtons();
+        scrollIntoViewSmooth();
+    }
+
+    /* تأثير تدمير صندوق المقدمة بالبكسلات */
+    function destroyIntroBoxAndShowExam() {
+        if (!introBox) return;
+        const rect = introBox.getBoundingClientRect();
+        const pixelCount = 160; // عدد البكسلات التقريبي
+
+        introBox.classList.add("destroying", "fade-out-content");
+
+        for (let i = 0; i < pixelCount; i++) {
+            const pixel = document.createElement("div");
+            pixel.className = "intro-pixel";
+
+            const x = Math.random() * rect.width;
+            const y = Math.random() * rect.height;
+
+            pixel.style.left = x + "px";
+            pixel.style.top = y + "px";
+
+            const delay = Math.random() * 0.3;
+            pixel.style.animationDelay = delay + "s";
+
+            introBox.appendChild(pixel);
+        }
+
+        setTimeout(() => {
+            introBox.remove();
+            examSection.classList.remove("hidden");
+            examSection.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 900);
+    }
+
+    /* شرح الامتحان */
+    function showExplanation() {
+        alert(
+            "شرح الامتحان:\n\n" +
+            "١- الامتحان مكوّن من ١٥ سؤالًا اختيار من متعدد.\n" +
+            "٢- الموضوعات: فقر الدم، سرطان الدم، القلب، الكلى، وبعض المفاهيم العامة في العلوم.\n" +
+            "٣- الدرجة النهائية يتم تحويلها إلى ٢٠/٢٠ مع نسبة مئوية وتقدير لفظي.\n" +
+            "٤- يمكنك التنقل بين الأسئلة باستخدام أزرار (السابق / التالي).\n" +
+            "٥- بعد الانتهاء، اضغط على (عرض النتيجة) لترى تقييمك."
+        );
+    }
+
+    /* ربط الأزرار بالأحداث */
+    function initEvents() {
+        prevBtn.addEventListener("click", () => {
+            showSlide(currentIndex - 1, "backward");
+        });
+
+        nextBtn.addEventListener("click", () => {
+            showSlide(currentIndex + 1, "forward");
+        });
+
+        submitBtn.addEventListener("click", () => {
+            if (!canSubmit()) {
+                alert("لم تُجِب عن أي سؤال بعد.\nأجب عن بعض الأسئلة قبل طلب النتيجة.");
+                return;
+            }
+            if (warnIfManyUnanswered()) {
+                return;
+            }
+            showResult();
+        });
+
+        restartBtn.addEventListener("click", () => {
+            if (window.confirm("هل تريد بالتأكيد إعادة الامتحان من البداية؟")) {
+                restartExam();
+            }
+        });
+
+        startBtn.addEventListener("click", destroyIntroBoxAndShowExam);
+        explainBtn.addEventListener("click", showExplanation);
+    }
+
+    /* تهيئة الامتحان عند تحميل الصفحة */
+    function initExam() {
+        buildSlides();
+        updateProgress();
+        syncNavButtons();
+        initEvents();
+    }
+
+    document.addEventListener("DOMContentLoaded", initExam);
+</script>
+</body>
+</html>
